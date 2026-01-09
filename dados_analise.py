@@ -1,4 +1,3 @@
-import pandas as pnd
 import numpy as np
 import matplotlib.pyplot as plt
 import analise_utils as au
@@ -105,34 +104,3 @@ def analise_interacoes(dataset):
 
     plt.tight_layout()
     plt.show()
-
-
-def preprocess_dataset(path):
-
-    dataset = pnd.read_csv(path)
-
-    dataset.columns = dataset.columns.str.strip().str.lower()
-
-    dataset = dataset[['product_id', 'product_name', 'user_id', 'rating', 'rating_count', 'category', 'about_product']]
-
-    dataset['user_id'] = dataset['user_id'].astype(str).str.split(',')
-    dataset = dataset.explode('user_id')
-
-    dataset['user_id'] = dataset['user_id'].str.strip()
-    dataset['product_id'] = dataset['product_id'].str.strip()
-
-    dataset['rating'] = pnd.to_numeric(dataset['rating'], errors='coerce')
-
-    dataset['rating_count'] = (
-        dataset['rating_count']
-        .astype(str)
-        .str.replace(',', '')
-    )
-    dataset['rating_count'] = pnd.to_numeric(dataset['rating_count'], errors='coerce')
-
-    dataset = dataset.dropna(subset=['user_id', 'product_id', 'rating'])
-    dataset = dataset.drop_duplicates(['user_id', 'product_id'])
-    
-    dataset['main_category'] = dataset['category'].str.split('|').str[0]
-
-    return dataset
