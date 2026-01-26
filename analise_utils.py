@@ -40,6 +40,8 @@ def get_user_rating_profile(dataset):
     users_stats['avg_rating'] = avg_rating_per_user.values
     users_stats['variancia_rating'] = grouped_dataset['rating'].var().values
 
+    users_stats['count_ratings'] = grouped_dataset['rating'].count().values
+
     users_stats['generoso_ou_critico'] = normaliza_0_10(users_stats['avg_rating'])
 
     return users_stats
@@ -68,6 +70,8 @@ def get_product_rating_profile(dataset):
     )
 
     product_stats.drop(columns=['product_id'], inplace=True)
+
+    product_stats['count_ratings'] = grouped_dataset['rating'].count().values
 
     product_stats['qualidade'] = normaliza_0_10(product_stats['avg_rating'])
 

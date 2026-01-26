@@ -30,38 +30,39 @@ def analise_usuarios(dataset):
     plt.tight_layout()
     plt.show()
 
+    counts = user_rating_profile['count_ratings']
 
-def analise_itens(dataset):
+    p1 = counts.quantile(0.33)
+    p2 = counts.quantile(0.66)
 
-    product_rating_profile = au.get_product_rating_profile(dataset)
-
-    product_popularity = (
-        dataset
-        .groupby('product_id')['user_id']
-        .nunique()
-        .reset_index(name='popularidade')
+    user_rating_profile['nivel_atividade'] = np.select(
+        [
+            counts <= p1,
+            (counts > p1) & (counts <= p2),
+            counts > p2
+        ],
+        [
+            'pouco ativo',
+            'medio ativo',
+            'muito ativo'
+        ],
+        default='indefinido'
     )
 
-    product_quality_popularity = product_rating_profile.merge(
-        product_popularity,
-        left_on='product',
-        right_on='product_id'
-    )
+    activity_counts = user_rating_profile['nivel_atividade'].value_counts()
 
-    plt.figure(figsize=(10, 6))
-    plt.scatter(
-        product_quality_popularity['popularidade'],
-        product_quality_popularity['qualidade'],
-        alpha=0.4
-    )
+    plt.figure(figsize=(8, 6))
+    activity_counts.plot(kind='bar')
 
-    plt.xscale('log')
-    plt.xlabel('Popularidade (usuários distintos)')
-    plt.ylabel('Qualidade normalizada')
-    plt.title('Popularidade vs Qualidade dos produtos')
+    plt.xlabel('Nível de atividade do usuário')
+    plt.ylabel('Número de usuários')
+    plt.title('Classificação dos usuários por nível de atividade')
 
+    plt.xticks(rotation=0)
     plt.tight_layout()
     plt.show()
+
+def analise_itens(dataset):#aplicar nlp posteriormente
 
     category_distr = dataset['main_category'].value_counts()
 
@@ -104,3 +105,31 @@ def analise_interacoes(dataset):
 
     plt.tight_layout()
     plt.show()
+
+def cruzar_info(dataset):
+
+    user_rating_profile = au.get_user_rating_profile(dataset)
+    product_rating_profile = au.get_product_rating_profile(dataset)
+
+    ranking = (
+        product_rating_profile
+        .sort_values('count_ratings', ascending=False)
+        .head(20)
+    )
+
+    plt.figure(figsize=(10, 6))
+
+    plt.barh(
+        ranking['product'].astype(str),
+        ranking['count_ratings']
+    )
+
+    plt.xlabel('Número de avaliações')
+    plt.ylabel('Produto')
+    plt.title('Top 20 produtos mais populares')
+
+    plt.gca().invert_yaxis()
+    plt.tight_layout()
+    plt.show()
+
+

@@ -11,5 +11,6 @@ def main():
     da.analise_usuarios(dataset)
     da.analise_itens(dataset)
     da.analise_interacoes(dataset)
+    da.cruzar_info(dataset)
 
 main()
