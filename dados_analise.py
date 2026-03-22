@@ -62,7 +62,8 @@ def analise_usuarios(dataset):
     plt.tight_layout()
     plt.show()
 
-def analise_itens(dataset):#aplicar nlp posteriormente
+
+def analise_itens(dataset):
 
     category_distr = dataset['main_category'].value_counts()
 
@@ -79,6 +80,28 @@ def analise_itens(dataset):#aplicar nlp posteriormente
 
 
 def analise_interacoes(dataset):
+
+    plt.figure(figsize=(10, 6))
+    plt.hist(dataset['rating'], bins=20)
+
+    plt.xlabel('Nota')
+    plt.ylabel('Frequência')
+    plt.title('Distribuição das avaliações')
+
+    plt.tight_layout()
+    plt.show()
+
+    item_popularity = dataset['product_id'].value_counts()
+
+    plt.figure(figsize=(10, 6))
+    plt.hist(item_popularity.values, bins=50, log=True)
+
+    plt.xlabel('Número de avaliações por item')
+    plt.ylabel('Número de itens (log)')
+    plt.title('Distribuição da popularidade dos itens')
+
+    plt.tight_layout()
+    plt.show()
 
     user_activity = dataset['user_id'].value_counts().sort_values(ascending=False)
 
@@ -106,6 +129,7 @@ def analise_interacoes(dataset):
     plt.tight_layout()
     plt.show()
 
+
 def cruzar_info(dataset):
 
     user_rating_profile = au.get_user_rating_profile(dataset)
@@ -132,4 +156,15 @@ def cruzar_info(dataset):
     plt.tight_layout()
     plt.show()
 
+    categorias = dataset['main_category'].value_counts().head(15)
 
+    plt.figure(figsize=(10, 6))
+    categorias.plot(kind='bar')
+
+    plt.xlabel('Categoria')
+    plt.ylabel('Número de avaliações')
+    plt.title('Categorias mais avaliadas pelos usuários')
+
+    plt.xticks(rotation=45, ha='right')
+    plt.tight_layout()
+    plt.show()
