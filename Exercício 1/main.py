@@ -1,7 +1,7 @@
 import dados_analise as da
 import analise_utils as au
 
-DATASET_PATH = "amazon.csv"
+DATASET_PATH = "datasets/amazon.csv"
 
 
 def gerar_dataset_final(dataset):
@@ -53,6 +53,6 @@ def main():
     da.cruzar_info(dataset)
 
     final_dataset = gerar_dataset_final(dataset)
-    final_dataset.to_csv("final_dataset.csv", index=False)
+    final_dataset.to_csv("datasets/final_dataset.csv", index=False)
 
 main()
