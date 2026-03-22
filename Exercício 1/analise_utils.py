@@ -86,10 +86,9 @@ def preprocess_dataset(path):
 
     dataset = dataset[['product_id', 'product_name', 'user_id', 'rating', 'rating_count', 'category', 'about_product']]
 
-    dataset['user_id'] = dataset['user_id'].astype(str).str.split(',')
-    dataset = dataset.explode('user_id')
+    dataset['user_id'] = range(len(dataset))
 
-    dataset['user_id'] = dataset['user_id'].str.strip()
+    #dataset['user_id'] = dataset['user_id'].str.strip()
     dataset['product_id'] = dataset['product_id'].str.strip()
 
     dataset['rating'] = pnd.to_numeric(dataset['rating'], errors='coerce')
